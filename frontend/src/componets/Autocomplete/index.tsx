@@ -73,9 +73,7 @@ const Autocomplete = () => {
 
     const checkErrors = useCallback(() => {
         if (select.value === "same") {
-            console.log("checkin errors)");
             setErrorDialogSecond(false);
-            console.log(selectedDestination.length);
             selectedDestination.length === 0
                 ? setErrorDialog(true)
                 : setErrorDialog(false);
@@ -103,12 +101,10 @@ const Autocomplete = () => {
     useEffect(() => {
         const modalData = () => {
             if (errorDialog || errorDialogSecond) {
-                console.log("error");
                 setModalHeader(
                     "An error occurred while trying to perform your search"
                 );
             } else {
-                console.log("success");
                 setModalHeader("Success!!");
             }
             if (errorDialog) {
