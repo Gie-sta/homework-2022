@@ -1,0 +1,29 @@
+.container {
+    .select {
+        border: none;
+        font-size: 14px;
+        outline: none;
+        cursor: pointer;
+
+        .option {
+            cursor: pointer;
+        }
+    }
+    .search_group {
+        display: flex;
+
+        .input_container {
+            display: flex;
+        }
+        .btn {
+            width: 56px;
+            height: 52px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ff690f 0%, #e8381b 100%);
+            border-radius: 15%;
+            z-index: 0;
+        }
+    }
+}
