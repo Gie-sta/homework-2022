@@ -2,11 +2,60 @@ import React, { useCallback, useEffect, useState } from "react";
 import AutocompleteBox from "../AutocompleteInputBox";
 import ModalComponent from "../Modal";
 import { CgSearch } from "react-icons/cg";
+import Select, { StylesConfig } from "react-select";
 
 import styles from "./styles.module.scss";
 
+type OptionType = {
+    label: string;
+    value: string;
+};
+
+const customStyles: StylesConfig<OptionType, false> = {
+    menu: (provided) => ({
+        ...provided,
+        width: 260,
+        top: -7,
+    }),
+    option: (provided, state) => ({
+        ...provided,
+        color: "black",
+        fontSize: 14,
+        fontWeight: state.isSelected ? "bold" : "normal",
+        backgroundColor: state.isSelected ? "#f0f3f5" : "#fff",
+        cursor: "pointer",
+        padding: 20,
+        "&:hover": {
+            backgroundColor: "#f0f3f5",
+        },
+    }),
+    control: (provided) => ({
+        ...provided,
+        width: 165,
+        border: "none",
+        marginBottom: 10,
+        cursor: "pointer",
+        fontSize: 14,
+    }),
+    dropdownIndicator: (base) => ({
+        ...base,
+        color: "#212a30",
+        "&:hover": {
+            color: "#212a30",
+        },
+    }),
+};
+
 const Autocomplete = () => {
-    const [select, setSelect] = useState("same");
+    const options = [
+        { value: "same", label: "Same drop-off" },
+        { value: "dif", label: "Different drop-off" },
+    ];
+
+    const [select, setSelect] = useState({
+        value: "same",
+        label: "Same drop-off",
+    });
     const [errorDialog, setErrorDialog] = useState(true);
     const [errorDialogSecond, setErrorDialogSecond] = useState(true);
     const [selectedDestination, setSelectedDestination] = useState("");
@@ -15,12 +64,15 @@ const Autocomplete = () => {
     const [modalHeader, setModalHeader] = useState("");
     const [modalText, setModalText] = useState("");
 
-    const selectHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelect(event?.target.value);
-    };
+    const selectHandler = (
+        obj: {
+            value: string;
+            label: string;
+        } | null
+    ) => obj && setSelect(obj);
 
     const checkErrors = useCallback(() => {
-        if (select === "same") {
+        if (select.value === "same") {
             console.log("checkin errors)");
             setErrorDialogSecond(false);
             console.log(selectedDestination.length);
@@ -70,30 +122,38 @@ const Autocomplete = () => {
 
     return (
         <div className={styles.container}>
-            <select
-                onChange={(event) => selectHandler(event)}
+            <Select
                 value={select}
-                className={styles.select}
-            >
-                <option value="same" className={styles.option}>
-                    Same drop-off
-                </option>
-                <option value="dif" className={styles.option}>
-                    Different drop-off
-                </option>
-            </select>
+                onChange={(option) => selectHandler(option)}
+                defaultValue={options[0]}
+                options={options}
+                styles={customStyles}
+                components={{
+                    IndicatorSeparator: () => null,
+                }}
+                theme={(theme) => ({
+                    ...theme,
+                    borderRadius: 0,
+                    colors: {
+                        ...theme.colors,
+                        primary25: "#f0f3f5",
+                        primary: "#f0f3f5",
+                    },
+                })}
+            />
+
             <div className={styles.search_group}>
                 <div className={styles.input_container}>
                     <AutocompleteBox
                         destination={"From?"}
                         setSelectedLocation={setSelectedDestination}
-                        select={select}
+                        select={select.value}
                     />
-                    {select === "dif" && (
+                    {select.value === "dif" && (
                         <AutocompleteBox
                             destination={"To?"}
                             setSelectedLocation={setSelectedDropOf}
-                            select={select}
+                            select={select.value}
                         />
                     )}
                 </div>
